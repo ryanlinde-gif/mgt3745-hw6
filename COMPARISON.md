@@ -164,4 +164,13 @@ made of guesses neither was asked to make.
 
 ## Handoff to the Team
 
-Pull request or issue proposing a FEATURES.md change: _pending_.
+Pull request proposing a FEATURES.md change: **[mgt3745-team-gamma#16](https://github.com/aaronsarasota04/mgt3745-team-gamma/pull/16)**
+
+It adds **F3-0** (take the ranking from F2, do not invent one), tightens F3-1
+with the ten-skill cap and the F1-3 matching rule, settles "exactly half" in
+F3-2 and forbids warning styling that appears only below half, marks F3 subject
+to X5 and X6, and adds a note at the top of the Exclusions section explaining
+why a feature-scoped prompt never carries them.
+
+The team decides whether to merge it. My job was to put the evidence in front
+of them.

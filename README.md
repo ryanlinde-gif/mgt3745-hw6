@@ -78,7 +78,7 @@ extraction would have hidden the most useful thing this comparison found.
 - [prompts/PROMPT.md](prompts/PROMPT.md): the exact input both builders received
 - [builds/](builds/): bolt.zip and aistudio.zip
 - [docs/DDR-001.md](docs/DDR-001.md) (bolt.new), [docs/DDR-002.md](docs/DDR-002.md) (AI Studio)
-- Team pull request or issue: <URL>  <!-- filled after the PR is opened -->
+- Team pull request proposing the FEATURES.md change: [mgt3745-team-gamma#16](https://github.com/aaronsarasota04/mgt3745-team-gamma/pull/16)
 - Deployed Worker: not applicable. F3 is arithmetic over a ranked list and has no AI behaviour, so the Gemini proxy step was skipped, as the assignment allows.
 
 ## Hours
