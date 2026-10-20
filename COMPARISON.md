@@ -100,12 +100,67 @@ Maximum possible: 100.
 
 ### Scores (committed after the weights)
 
-_Not yet scored. This section is committed empty so the weights above are in the
-history first, as the Gate was._
+| Criterion | Weight | bolt.new | AI Studio |
+|---|---|---|---|
+| Fits the stack ADR-001 commits us to | 5 | 1 | 5 |
+| Respects the exclusions in FEATURES.md | 5 | 1 | 5 |
+| Correctness against the EARS rows | 4 | 5 | 4 |
+| Review and integration cost | 3 | 1 | 4 |
+| Trust boundary behaviour | 3 | 1 | 5 |
+| **Weighted total (max 100)** | | **36** | **93** |
+
+**Notes on the scores.**
+
+- **bolt scores 5 on correctness and still loses by 57 points.** It is the more
+  correct build. It passed all four code-eval checks and AI Studio did not. It
+  loses on everything that is not correctness, and the weights say that is the
+  right way to lose, because correctness on the wrong stack is work we throw away.
+- **bolt scores 1, not 2, on fitting the stack.** React, TypeScript, Vite,
+  Tailwind and Supabase. Not one of those survives contact with ADR-001. There is
+  no partial credit available: the arithmetic in `SkillMatch.tsx` is three lines
+  and I could retype it from the EARS rows faster than I could strip the project
+  around it.
+- **AI Studio scores 4, not 5, on correctness** because of the twelve-skill
+  defect. It is a real bug, the test proves it, and it is a two-line fix.
+- **bolt scores 1 on trust boundary** for the `.env`, not for using Supabase.
+  Choosing a database when the spec is silent is a judgment I disagree with.
+  Writing a live key into a file it hands back is a different kind of problem.
 
 ### Decision
 
-_Pending the scores above._
+**Use Google AI Studio for F3 in Phase 2. 93 to 36.**
+
+The reason is not that AI Studio is the better builder in general. On the only
+criterion that measures whether the thing works, bolt beat it. The reason is
+that ADR-001 already decided our stack, and AI Studio's output is that stack:
+one file of plain HTML, CSS and JavaScript, no build step, no dependencies,
+`createElement` and `textContent` throughout, which happens to satisfy
+`STANDARDS.md` rules 2 and 5 without ever having been shown them. It drops into
+a Cloudflare Worker and a static page with no translation. bolt's output has to
+be dismantled first.
+
+**What gets harder with this choice, named.** Three things.
+
+First, **AI Studio hands back one 494-line file with no structure.** No
+components, no modules, no types, no tests. F3 is small enough that this does
+not hurt. F1 is ten rows and will not be. Whoever takes AI Studio into a larger
+feature inherits a file that gets worse every time it grows, and nothing in the
+tool pushes back.
+
+Second, **AI Studio gave no scaffolding at all.** bolt produced a runnable
+project with a dev server, a migration, and seeded data. AI Studio produced a
+page with its data hardcoded in a JS object. Wiring F3 to the real Worker and
+D1 is manual work that bolt would have half-done, badly, in the wrong place.
+
+Third, and most honestly, **this recommendation rests on one feature and one
+prompt each.** F3 is three rows of arithmetic. It is the smallest feature we
+have. A result from the smallest feature is the weakest evidence for the
+largest one, and F1 is what Phase 2 actually needs.
+
+**The recommendation I would defend harder than the builder choice:** put the
+exclusions inside the feature rows. Both builders were handed a silent spec and
+both filled the silence, and the 57-point gap between them is almost entirely
+made of guesses neither was asked to make.
 
 ## Handoff to the Team
 
