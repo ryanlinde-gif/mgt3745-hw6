@@ -4,12 +4,23 @@
 
 ## Feature
 
-**Team repository:** <URL of your team repository>
-**Spec provenance:** copied from commit `<full commit hash>` on <YYYY-MM-DD>
+**Team repository:** https://github.com/aaronsarasota04/mgt3745-team-gamma
+**Spec provenance:** copied from commit `5abbc1c5509800ce9898e9935eafdf94cf694cc0` on 2026-10-20
 
-**Feature:** <ID and name from your team's FEATURES.md>
+The team's `context/STYLE.md` and `context/SKILLS.md` are still Phase 2 preview
+stubs on `main`, so this repository carries my own HW5 versions of those two
+files, as the assignment allows. Every other file in `context/` is the team's,
+unchanged, at the hash above.
 
-<Paste the feature's EARS rows here, unchanged. At least three rows, including at least one IF row.>
+**Feature:** F3, Share of Top Skills Held (J-Devon). Performance class.
+
+EARS rows, copied unchanged from the team's `FEATURES.md`:
+
+- F3-1. THE SYSTEM SHALL show how many of the 10 top-ranked skills for the role the student already has.
+- F3-2. IF the student has fewer than half of the top-ranked skills, THEN THE SYSTEM SHALL still show the gap and SHALL NOT tell the student whether to apply, because the decision stays with the student.
+- F3-3. IF the role has fewer than 10 ranked skills, THEN THE SYSTEM SHALL count against the skills it has and show the total used.
+
+Teammates took the other features: Aaron F1, Prince F2.
 
 ## See It Work
 
