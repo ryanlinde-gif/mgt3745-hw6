@@ -67,16 +67,31 @@ Supabase anon key rather than a service key, so the blast radius is small, but
 `STANDARDS.md` rule 9 says no credentials in repositories, ever, and I co-own
 that file.
 
-**5. The more correct build is the one that does not run.** bolt's preview, in
-bolt, after bolt reported the build finished, renders a blank white page. The
-application depends on a Supabase project it provisioned for itself, and with
-that project unreachable there is no fallback and no error state, only white.
-Screenshot in [docs/img/bolt.png](docs/img/bolt.png).
+**5. bolt reported success it had not verified.** After the build, bolt wrote:
 
-This is not a scoring criterion I set in advance and I have not retrofitted one
-to punish it. But it is the plainest available summary of why the weights are
-shaped the way they are: bolt passed every code-eval check and still cannot be
-handed to a teammate, because what it produced was never ours to run.
+> "Build and typecheck pass. The page is complete and meets every acceptance
+> criterion."
+
+and then listed F3-1, F3-2 and F3-3 one by one with a description of how each
+was satisfied, down to naming the six-skill "IT Support Specialist" role it
+seeded to exercise F3-3.
+
+Its own preview, in its own interface, renders a blank white page. Screenshot
+in [docs/img/bolt.png](docs/img/bolt.png).
+
+Both statements are defensible in isolation. The build and the typecheck almost
+certainly did pass: nothing about a Supabase connection failing at runtime stops
+TypeScript compiling. "The page is complete and meets every acceptance
+criterion" is the claim that outruns the evidence, because a page that renders
+nothing cannot be shown to meet a criterion about what it displays.
+
+**This is the finding I would put in front of my team.** bolt is the more
+correct build by the only measure I applied in code, 4 of 4 against AI Studio's
+3 of 4, and it is also the build that told me it worked when it did not. A
+teammate who reads the builder's summary and merges is merging a blank page with
+a confident changelog attached. The summary is not a lie and it is not a
+verification either, and `STANDARDS.md` draws exactly that line: a DDR records
+**verification performed**, not verification claimed.
 
 ## Spec Gaps
 

@@ -29,18 +29,27 @@ Teammates took the other features: Aaron F1, Prince F2.
 | ![bolt build, blank preview](docs/img/bolt.png) | ![AI Studio build](docs/img/aistudio.png) |
 
 **The bolt image is not a mistake.** That is bolt's own preview pane, in bolt,
-after the build it reported as finished. It renders nothing. The page is backed
-by a Supabase Postgres database that bolt provisioned for itself, and with that
-database unreachable the application has no fallback and shows white.
+after the build. It renders nothing. The page is backed by a Supabase Postgres
+database bolt provisioned for itself, and with that database unreachable the
+application has no fallback and shows white.
+
+What makes it worth looking at is what bolt said about the same build:
+
+> "Build and typecheck pass. The page is complete and meets every acceptance
+> criterion."
+
+It then described how each of F3-1, F3-2 and F3-3 was satisfied. The build and
+the typecheck did pass. The page meets nothing, because the page does not
+render.
 
 The AI Studio build on the right opens from a local file with no network, no
 server and no credentials, and is the screenshot you see.
 
 This is the clearest single statement of the difference between the two builds.
 bolt scored **4 of 4** on the shared code eval and AI Studio **3 of 4**: bolt's
-arithmetic is the more correct of the two. But correctness lives in
-`SkillMatch.tsx`, and the thing a teammate actually receives is a project that
-does not start.
+arithmetic is genuinely the more correct of the two. But correctness lives in
+`SkillMatch.tsx`, and what a teammate actually receives is a project that does
+not start, under a summary saying it does.
 
 A third image, [docs/img/bolt-log.png](docs/img/bolt-log.png), shows bolt
 announcing "I'll use Bolt Database to persist role and student skill data"
