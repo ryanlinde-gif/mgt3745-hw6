@@ -85,21 +85,22 @@ muted text.
 
 No summary from me, and no access to `COMPARISON.md` before answering.
 
-**Second grader:** _to be named: a classmate, or a model that had no part in
-producing these files. Claude Opus 5 is not eligible; it wrote the evals and
-the memo, recorded in docs/DDR-003.md._
+**Second grader:** Luke, a classmate, with no part in producing any of these
+files and no sight of `COMPARISON.md` before answering. Claude Opus 5 was not
+eligible; it wrote the evals and the memo, recorded in `docs/DDR-003.md`.
+Answered 2026-10-20.
 
 ## Results
 
 | Item | Question (Yes / No) | Me | Second grader |
 |---|---|---|---|
-| J1 | Looking only at **AI Studio** in its below-half state: does anything on screen tell the student whether to apply? | No | |
-| J2 | In the **bolt** block above: does the below-half branch tell the student whether to apply, by words or by treatment? | **Yes** | |
-| J3 | If you answered Yes to J2, was it the **words** rather than the styling? | No | |
-| J4 | Does the bolt build define every colour as a CSS custom property on `:root`, with no hex values hard-coded elsewhere, as the prompt required? | No | |
-| J5 | In the **AI Studio** build, is the largest object on screen the result, as the prompt required? | Yes | |
+| J1 | Looking only at **AI Studio** in its below-half state: does anything on screen tell the student whether to apply? | No | **No** |
+| J2 | In the **bolt** block above: does the below-half branch tell the student whether to apply, by words or by treatment? | **Yes** | **Yes** |
+| J3 | If you answered Yes to J2, was it the **words** rather than the styling? | No | **No** |
+| J4 | Does the bolt build define every colour as a CSS custom property on `:root`, with no hex values hard-coded elsewhere, as the prompt required? | No | **No** |
+| J5 | In the **AI Studio** build, is the largest object on screen the result, as the prompt required? | Yes | **Yes** |
 
-**Agreement rate:** _pending, N of 5._
+**Agreement rate: 5 of 5, 100%.**
 
 ## My Answers, With Reasons
 
@@ -131,5 +132,25 @@ did not ask for and which `FEATURES.md` X6 excludes.
 
 ## Disagreements
 
-_To be filled after the second grader answers. For each disagreement: why, and
-what it says about the question or about the evidence I gave._
+**None.** The second grader matched me on all five items.
+
+**That is a weaker result than it looks, and it is worth saying so.** An
+agreement rate of 100% can mean the judgment was sound, or it can mean the
+questions were leading. Three of these five have a defensible claim to being
+leading: J2 quotes a code block and then asks whether it does the thing the
+block visibly does, and J3 and J4 are close to checkable facts rather than
+judgments. If I ran this again I would put J2 in front of the grader without
+the surrounding commentary and let them find the branch themselves.
+
+**The item that earns its place is J3, and the grader's reason is better than
+mine.** I wrote that bolt fails F3-2 on styling rather than wording. The second
+grader, with no sight of my answers, wrote: *"The warning styling communicates
+the negative message, not the actual words."* That is the same finding reached
+independently, and it is the part of the F3-2 judgment a code eval could never
+have produced. It is the reason bolt is Partial on that row rather than Pass.
+
+**J4 is confirmation rather than judgment.** Both of us answered No, and anyone
+can verify it mechanically: bolt sets the tokens on `:root` and then writes
+colours through inline `style={{ ... }}` on JSX elements, with Tailwind utility
+classes layered on top. It belongs in this file because the prompt asked for it
+explicitly, not because it needed a human.

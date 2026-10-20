@@ -34,8 +34,15 @@ What the counts measure is what each builder does when the spec is silent.
 
 ## Judgment Eval
 
-Agreement rate with the second grader: _pending_. Details in
-[JUDGMENT.md](JUDGMENT.md).
+**Agreement rate with the second grader: 5 of 5, 100%.** A classmate with no
+part in producing these files and no sight of this document answered all five
+items as I did. Details, and an honest note on why a perfect agreement rate is
+weaker evidence than it looks, in [JUDGMENT.md](JUDGMENT.md).
+
+The item worth reading is J3. Independently of me, the grader wrote that in
+bolt's below-half state *"the warning styling communicates the negative message,
+not the actual words."* That is the F3-2 Partial, reached twice, and it is the
+part of this comparison no code eval could have produced.
 
 ## Findings
 
