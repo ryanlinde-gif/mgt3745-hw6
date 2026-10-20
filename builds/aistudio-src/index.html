@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Match Explorer — Target Role Top Skills</title>
+  <style>
+    :root {
+      --color-text: #172b40;
+      --color-text-muted: #45586b;
+      --color-background: #f7f9fb;
+      --color-surface: #fafafa;
+      --color-primary: #123552;
+      --color-on-primary: #ffffff;
+      --color-border: #526578;
+      --color-divider: #b8c5d0;
+      --color-focus: #b16d00;
+      --color-danger: #922020;
+      --color-attention: #7a3d00;
+      --color-attention-surface: #ffe8c2;
+      --font-body: system-ui;
+      --font-size-min: 14px;
+      --space-unit: 8px;
+      --radius: 4px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--font-size-min);
+      line-height: 1.5;
+      background-color: var(--color-background);
+      color: var(--color-text);
+      padding: calc(var(--space-unit) * 3);
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: calc(var(--space-unit) * 3);
+    }
+
+    h1 {
+      font-size: calc(var(--font-size-min) * 1.5);
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: calc(var(--space-unit) * 0.5);
+    }
+
+    .user-context {
+      color: var(--color-text-muted);
+      font-size: var(--font-size-min);
+    }
+
+    .selector-group {
+      margin-bottom: calc(var(--space-unit) * 3);
+    }
+
+    label.field-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--space-unit);
+      color: var(--color-text);
+    }
+
+    select {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: calc(var(--font-size-min) * 1.1);
+      padding: calc(var(--space-unit) * 1.25);
+      background-color: var(--color-surface);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+    }
+
+    select:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    /* Result area: largest object on screen */
+    .result-display {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius);
+      padding: calc(var(--space-unit) * 3);
+      text-align: center;
+      margin-bottom: calc(var(--space-unit) * 3);
+    }
+
+    .result-score {
+      font-size: calc(var(--font-size-min) * 4);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--color-primary);
+      display: block;
+    }
+
+    .result-caption {
+      font-size: calc(var(--font-size-min) * 1.15);
+      font-weight: 600;
+      color: var(--color-text);
+      margin-top: var(--space-unit);
+    }
+
+    .result-subcaption {
+      font-size: var(--font-size-min);
+      color: var(--color-text-muted);
+      margin-top: calc(var(--space-unit) * 0.5);
+    }
+
+    /* Gap and skills held indicators */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: calc(var(--space-unit) * 2);
+      margin-top: calc(var(--space-unit) * 2.5);
+      text-align: left;
+    }
+
+    .summary-card {
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius);
+      padding: calc(var(--space-unit) * 1.5);
+      background-color: var(--color-background);
+    }
+
+    .summary-title {
+      font-size: var(--font-size-min);
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: calc(var(--space-unit) * 0.5);
+    }
+
+    .summary-count {
+      font-size: calc(var(--font-size-min) * 1.75);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* Neutral factual notice - never tells the user whether to apply */
+    .agency-note {
+      margin-top: calc(var(--space-unit) * 2);
+      padding: calc(var(--space-unit) * 1.5);
+      background-color: var(--color-attention-surface);
+      border-left: calc(var(--space-unit) * 0.5) solid var(--color-attention);
+      border-radius: var(--radius);
+      font-size: var(--font-size-min);
+      color: var(--color-text);
+      text-align: left;
+    }
+
+    /* Checklist of ranked skills */
+    .skills-section {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius);
+      padding: calc(var(--space-unit) * 2.5);
+    }
+
+    .skills-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: calc(var(--space-unit) * 1.5);
+      border-bottom: 1px solid var(--color-divider);
+      padding-bottom: var(--space-unit);
+    }
+
+    .skills-heading {
+      font-size: calc(var(--font-size-min) * 1.15);
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .skills-subheading {
+      font-size: var(--font-size-min);
+      color: var(--color-text-muted);
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-unit);
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--space-unit) * 1.5);
+      padding: calc(var(--space-unit) * 1);
+      border: 1px solid var(--color-divider);
+      border-radius: var(--radius);
+      background-color: var(--color-surface);
+    }
+
+    .skill-item input[type="checkbox"] {
+      width: calc(var(--space-unit) * 2.25);
+      height: calc(var(--space-unit) * 2.25);
+      accent-color: var(--color-primary);
+      cursor: pointer;
+    }
+
+    .skill-item input[type="checkbox"]:focus-visible {
+      outline: 2px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    .skill-rank {
+      font-weight: 700;
+      color: var(--color-text-muted);
+      min-width: calc(var(--space-unit) * 3);
+    }
+
+    .skill-label {
+      flex: 1;
+      cursor: pointer;
+      color: var(--color-text);
+      font-size: calc(var(--font-size-min) * 1.05);
+    }
+
+    .skill-status {
+      font-size: var(--font-size-min);
+      font-weight: 600;
+      padding: calc(var(--space-unit) * 0.25) calc(var(--space-unit) * 1);
+      border-radius: var(--radius);
+    }
+
+    .status-held {
+      color: var(--color-primary);
+    }
+
+    .status-gap {
+      color: var(--color-text-muted);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Top Skills Alignment</h1>
+      <p class="user-context">Candidate: Devon Carter &bull; Evaluate existing skills and view qualification gap</p>
+    </header>
+
+    <div class="selector-group">
+      <label for="role-select" class="field-label">Target Role</label>
+      <select id="role-select" aria-label="Select Target Role">
+        <option value="frontend-10">Junior Frontend Developer (10 ranked skills)</option>
+        <option value="fullstack-10">Entry-Level Full Stack Engineer (10 ranked skills)</option>
+        <option value="data-7">Junior Data Analyst (7 ranked skills — limited pool)</option>
+        <option value="cloud-6">Junior Cloud Support Associate (6 ranked skills — limited pool)</option>
+      </select>
+    </div>
+
+    <!-- Largest object on screen: Result display -->
+    <section class="result-display" aria-live="polite">
+      <span class="result-score" id="result-score">0 / 10</span>
+      <p class="result-caption" id="result-caption">0 of 10 top-ranked skills held</p>
+      <p class="result-subcaption" id="result-subcaption">Calculated against the top 10 ranked skills for this role.</p>
+
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-title">Skills you already have</div>
+          <div class="summary-count" id="count-held">0</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-title">Skill gap to preferred profile</div>
+          <div class="summary-count" id="count-gap">10</div>
+        </div>
+      </div>
+
+      <!-- F3-2: When student has fewer than half, still show the gap and DO NOT tell the student whether to apply -->
+      <div class="agency-note" id="agency-note" role="note">
+        <strong>Factual Summary:</strong> 
+        <span id="agency-message">You currently have fewer than half of the ranked skills. This shows the gap between your current inventory and the employer's preferred candidate list. The choice of whether to apply remains entirely yours.</span>
+      </div>
+    </section>
+
+    <!-- Interactive Skill Inventory for the Selected Role -->
+    <section class="skills-section">
+      <div class="skills-header">
+        <h2 class="skills-heading">Ranked Skills for Target Role</h2>
+        <span class="skills-subheading" id="total-skills-note">Showing all 10 ranked skills</span>
+      </div>
+      <ul class="skill-list" id="skill-list">
+        <!-- Rendered dynamically -->
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    const ROLES_DATA = {
+      "frontend-10": {
+        title: "Junior Frontend Developer",
+        skills: [
+          { id: "fe-1", name: "Semantic HTML & Accessible DOM", defaultChecked: true },
+          { id: "fe-2", name: "Modern JavaScript (ES6+)", defaultChecked: true },
+          { id: "fe-3", name: "CSS Layouts (Flexbox & Grid)", defaultChecked: true },
+          { id: "fe-4", name: "Component-based Framework (e.g. React/Vue)", defaultChecked: false },
+          { id: "fe-5", name: "Git Version Control & Branching", defaultChecked: true },
+          { id: "fe-6", name: "REST APIs & Asynchronous Fetch", defaultChecked: false },
+          { id: "fe-7", name: "Responsive Design & Mobile-First Patterns", defaultChecked: false },
+          { id: "fe-8", name: "Browser Developer Tools & Debugging", defaultChecked: false },
+          { id: "fe-9", name: "Basic Web Performance Optimization", defaultChecked: false },
+          { id: "fe-10", name: "Unit & Integration Testing Basics", defaultChecked: false }
+        ]
+      },
+      "fullstack-10": {
+        title: "Entry-Level Full Stack Engineer",
+        skills: [
+          { id: "fs-1", name: "JavaScript / TypeScript Fundamentals", defaultChecked: true },
+          { id: "fs-2", name: "Server-side Runtime (Node.js/Python/Java)", defaultChecked: false },
+          { id: "fs-3", name: "Relational Database Basics & SQL Queries", defaultChecked: false },
+          { id: "fs-4", name: "RESTful API Architecture", defaultChecked: false },
+          { id: "fs-5", name: "Git & Collaborative Pull Requests", defaultChecked: true },
+          { id: "fs-6", name: "Frontend State Management", defaultChecked: false },
+          { id: "fs-7", name: "Basic Authentication & Authorization (JWT/Cookies)", defaultChecked: false },
+          { id: "fs-8", name: "Containerization Basics (Docker)", defaultChecked: false },
+          { id: "fs-9", name: "Automated Testing & Test Runners", defaultChecked: false },
+          { id: "fs-10", name: "CI/CD Deployment Pipelines", defaultChecked: false }
+        ]
+      },
+      "data-7": {
+        title: "Junior Data Analyst",
+        skills: [
+          { id: "da-1", name: "SQL Querying (Joins, Aggregations)", defaultChecked: true },
+          { id: "da-2", name: "Data Cleaning & Transformation in Spreadsheets", defaultChecked: true },
+          { id: "da-3", name: "Data Visualization (Tableau / PowerBI)", defaultChecked: false },
+          { id: "da-4", name: "Exploratory Python (Pandas & NumPy)", defaultChecked: false },
+          { id: "da-5", name: "Descriptive Statistics Interpretation", defaultChecked: false },
+          { id: "da-6", name: "Reporting & Presentation of Findings", defaultChecked: true },
+          { id: "da-7", name: "Database Schema Understanding", defaultChecked: false }
+        ]
+      },
+      "cloud-6": {
+        title: "Junior Cloud Support Associate",
+        skills: [
+          { id: "cs-1", name: "Linux Command Line & Shell Navigation", defaultChecked: true },
+          { id: "cs-2", name: "Core Networking Fundamentals (DNS, TCP/IP, HTTP)", defaultChecked: false },
+          { id: "cs-3", name: "Cloud Compute Virtual Instances Management", defaultChecked: false },
+          { id: "cs-4", name: "IAM & Access Control Policies", defaultChecked: false },
+          { id: "cs-5", name: "Storage Buckets & Permissions Setup", defaultChecked: false },
+          { id: "cs-6", name: "Monitoring Logs & Alert Triaging", defaultChecked: false }
+        ]
+      }
+    };
+
+    // State
+    let currentRoleKey = "frontend-10";
+    let checkedSkills = new Set();
+
+    function init() {
+      const roleSelect = document.getElementById("role-select");
+      roleSelect.addEventListener("change", (e) => {
+        currentRoleKey = e.target.value;
+        loadRole(currentRoleKey);
+      });
+
+      loadRole(currentRoleKey);
+    }
+
+    function loadRole(roleKey) {
+      const role = ROLES_DATA[roleKey];
+      checkedSkills.clear();
+
+      role.skills.forEach(skill => {
+        if (skill.defaultChecked) {
+          checkedSkills.add(skill.id);
+        }
+      });
+
+      renderSkillList(role);
+      updateDisplay();
+    }
+
+    function renderSkillList(role) {
+      const listContainer = document.getElementById("skill-list");
+      listContainer.innerHTML = "";
+
+      const totalSkillsNote = document.getElementById("total-skills-note");
+      const total = role.skills.length;
+      totalSkillsNote.textContent = total < 10 
+        ? `Role has ${total} ranked skills available (counted out of ${total})` 
+        : `Showing top ${total} ranked skills`;
+
+      role.skills.forEach((skill, index) => {
+        const rank = index + 1;
+        const li = document.createElement("li");
+        li.className = "skill-item";
+
+        const isChecked = checkedSkills.has(skill.id);
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `skill-checkbox-${skill.id}`;
+        checkbox.checked = isChecked;
+        checkbox.setAttribute("aria-label", `Rank ${rank}: ${skill.name}`);
+
+        checkbox.addEventListener("change", () => {
+          if (checkbox.checked) {
+            checkedSkills.add(skill.id);
+          } else {
+            checkedSkills.delete(skill.id);
+          }
+          updateDisplay();
+          updateSkillItemStatus(li, checkbox.checked);
+        });
+
+        const rankSpan = document.createElement("span");
+        rankSpan.className = "skill-rank";
+        rankSpan.textContent = `#${rank}`;
+
+        const label = document.createElement("label");
+        label.className = "skill-label";
+        label.htmlFor = `skill-checkbox-${skill.id}`;
+        label.textContent = skill.name;
+
+        const statusSpan = document.createElement("span");
+        statusSpan.className = `skill-status ${isChecked ? "status-held" : "status-gap"}`;
+        statusSpan.textContent = isChecked ? "Held" : "Gap";
+
+        li.appendChild(checkbox);
+        li.appendChild(rankSpan);
+        li.appendChild(label);
+        li.appendChild(statusSpan);
+
+        listContainer.appendChild(li);
+      });
+    }
+
+    function updateSkillItemStatus(itemElement, isChecked) {
+      const statusSpan = itemElement.querySelector(".skill-status");
+      if (statusSpan) {
+        statusSpan.className = `skill-status ${isChecked ? "status-held" : "status-gap"}`;
+        statusSpan.textContent = isChecked ? "Held" : "Gap";
+      }
+    }
+
+    function updateDisplay() {
+      const role = ROLES_DATA[currentRoleKey];
+      const totalRanked = role.skills.length;
+      const heldCount = role.skills.filter(s => checkedSkills.has(s.id)).length;
+      const gapCount = totalRanked - heldCount;
+      const halfCount = totalRanked / 2;
+
+      // Acceptance criterion F3-1 & F3-3:
+      // Show how many of the top-ranked skills the student has.
+      // If role has fewer than 10, count against the skills it has and show total used.
+      const scoreEl = document.getElementById("result-score");
+      const captionEl = document.getElementById("result-caption");
+      const subcaptionEl = document.getElementById("result-subcaption");
+      const countHeldEl = document.getElementById("count-held");
+      const countGapEl = document.getElementById("count-gap");
+      const agencyNoteEl = document.getElementById("agency-note");
+      const agencyMsgEl = document.getElementById("agency-message");
+
+      scoreEl.textContent = `${heldCount} / ${totalRanked}`;
+      captionEl.textContent = `${heldCount} of ${totalRanked} top-ranked skills held`;
+
+      if (totalRanked < 10) {
+        subcaptionEl.textContent = `This role has ${totalRanked} ranked skills in total. All calculations count against this total of ${totalRanked}.`;
+      } else {
+        subcaptionEl.textContent = `Calculated against the 10 top-ranked skills identified for this role.`;
+      }
+
+      countHeldEl.textContent = `${heldCount} (${Math.round((heldCount / totalRanked) * 100)}%)`;
+      countGapEl.textContent = `${gapCount} (${Math.round((gapCount / totalRanked) * 100)}%)`;
+
+      // Acceptance criterion F3-2:
+      // IF the student has fewer than half of the top-ranked skills,
+      // THEN THE SYSTEM SHALL still show the gap and SHALL NOT tell the student whether to apply,
+      // because the decision stays with the student.
+      if (heldCount < halfCount) {
+        agencyNoteEl.style.display = "block";
+        agencyMsgEl.textContent = `You currently have ${heldCount} of ${totalRanked} top skills (a gap of ${gapCount} skill${gapCount === 1 ? '' : 's'}). Job postings frequently describe an employer's preferred candidate rather than a strict checklist. This factual gap is presented for your evaluation; the choice of whether to submit an application stays with you.`;
+      } else {
+        agencyNoteEl.style.display = "block";
+        agencyMsgEl.textContent = `You currently have ${heldCount} of ${totalRanked} top skills (a gap of ${gapCount} skill${gapCount === 1 ? '' : 's'}). Job descriptions reflect preferred profiles, and the decision to apply rests entirely with you.`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

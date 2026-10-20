@@ -3,3 +3,8 @@ node_modules/
 .dev.vars
 .DS_Store
 builds/*/
+
+# Exception: the AI Studio build is a single HTML file and the judgment eval
+# asks a second grader to open it. 18 KB, no dependencies.
+!builds/aistudio-src/
+!builds/aistudio-src/index.html
