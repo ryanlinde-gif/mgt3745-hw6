@@ -67,6 +67,17 @@ Supabase anon key rather than a service key, so the blast radius is small, but
 `STANDARDS.md` rule 9 says no credentials in repositories, ever, and I co-own
 that file.
 
+**5. The more correct build is the one that does not run.** bolt's preview, in
+bolt, after bolt reported the build finished, renders a blank white page. The
+application depends on a Supabase project it provisioned for itself, and with
+that project unreachable there is no fallback and no error state, only white.
+Screenshot in [docs/img/bolt.png](docs/img/bolt.png).
+
+This is not a scoring criterion I set in advance and I have not retrofitted one
+to punish it. But it is the plainest available summary of why the weights are
+shaped the way they are: bolt passed every code-eval check and still cannot be
+handed to a teammate, because what it produced was never ours to run.
+
 ## Spec Gaps
 
 Every place where both builders guessed, or guessed differently.
